@@ -37,8 +37,17 @@ myDB(async client => {
   routes(app, myDataBase);
   auth(app, myDataBase);
 
-  io.on('connection', socket => {
+  let currentUsers = 0;
+  io.on('connection', (socket) => {
+    ++currentUsers;
+    io.emit('user count', currentUsers);
     console.log('A user has connected');
+
+    socket.on('disconnect', () => {
+      --currentUsers;
+      io.emit('user count', currentUsers);
+      console.log('A user has disconnected');
+    });
   });
 
 }).catch(e => {
@@ -47,7 +56,7 @@ myDB(async client => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 http.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
 });
