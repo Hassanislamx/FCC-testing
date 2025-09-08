@@ -90,6 +90,7 @@ function onAuthorizeSuccess(data, accept) {
 function onAuthorizeFail(data, message, error, accept) {
   if (error) throw new Error(message);
   console.log('failed connection to socket.io:', message);
+  console.log('authentication data:', data);
   accept(null, false);
 }
 
