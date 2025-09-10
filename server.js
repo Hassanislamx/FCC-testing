@@ -63,6 +63,9 @@ myDB(async client => {
       currentUsers,
       connected: true
     });
+    socket.on('chat message', (message) => {
+      io.emit('chat message', { username: socket.request.user.username, message });
+    });
     console.log('A user has connected');
     socket.on('disconnect', () => {
       console.log('A user has disconnected');
@@ -90,7 +93,6 @@ function onAuthorizeSuccess(data, accept) {
 function onAuthorizeFail(data, message, error, accept) {
   if (error) throw new Error(message);
   console.log('failed connection to socket.io:', message);
-  console.log('authentication data:', data);
   accept(null, false);
 }
 
